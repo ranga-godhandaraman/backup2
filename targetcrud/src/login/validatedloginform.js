@@ -1,61 +1,12 @@
-// import React, {  } from "react";
 import React, { useRef, useState, useContext, createContext } from "react";
 import { Row, Col, FormGroup, Button, Form, Card } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import "./registration.css"
 
 
-// const fakeAuth = {
-//     isAuthenticated: false,
-//     signin(cb) {
-//         fakeAuth.isAuthenticated = true;
-//         setTimeout(cb, 100); // fake async
-//     },
-//     signout(cb) {
-//         fakeAuth.isAuthenticated = false;
-//         setTimeout(cb, 100);
-//     }
-// };
-
-// const authContext = createContext();
-
-// function ProvideAuth({ children }) {
-//     const auth = useProvideAuth();
-//     return (
-//         <authContext.Provider value={auth}>
-//             {children}
-//         </authContext.Provider>
-//     );
-// }
-
-// function useAuth() {
-//     return useContext(authContext);
-// }
-
-// function useProvideAuth() {
-//     const [user, setUser] = useState(null);
-
-//     const signin = cb => {
-//         return fakeAuth.signin(() => {
-//             setUser("user");
-//             cb();
-//         });
-//     };
-//     const signout = cb => {
-//         return fakeAuth.signout(() => {
-//             setUser(null);
-//             cb();
-//         });
-//     };
-
-//     return {
-//         user,
-//         signin,
-//         signout
-//     };
-    
-// }
 function ValidatedLoginForm() {
+
     const [errors, setErrors] = useState({ email: "", password: "" });
     let errorTimer = 0;
 
@@ -82,20 +33,18 @@ function ValidatedLoginForm() {
         }
         setErrors(errs)
         if (errs.email != "" || errs.password != "") return;
-        // console.log(loginForm);
         axios.post('http://localhost:8081/api/auth/signin', loginForm)
-            // .then(resp => resp.json())
             .then(data => {
                 console.log(data)
                 if (data.status == 200) {
+                    sessionStorage.setItem("userValidated", true);
                     navigate("/view");
                     alert('Congrats! You have Loggedin Successfully');
                 } else {
-                    alert('LoginFailed')
+                    sessionStorage.setItem("userValidated", false);
+                    alert('Login Failed');
                 }
             })
-
-
     }
 
 
@@ -103,11 +52,12 @@ function ValidatedLoginForm() {
         <div className="section" style={{ margin: "5rem" }} align="center" >
             <Row>
                 <Col>
-                    <Card style={{ width: '25rem' }} className="bg-primary text-white" >
+                    <Card style={{ width: '25rem' }} >
                         <Card.Body class='p-4' >
                             <Form onSubmit={handleSubmit}>
-                                <FormGroup as={Row} className="mb-3" controlId="formHorizontalEmail">
-                                    <Form.Label column sm={2} >Email</Form.Label>
+                                <h3>Sign In</h3>
+                                <FormGroup as={Row} className="mb-3" controlId="formHorizontalEmail" align="left">
+                                    <Form.Label column sm={3} >Email</Form.Label>
                                     <Form.Control
                                         type="text"
                                         placeholder="Enter your email"
@@ -117,8 +67,8 @@ function ValidatedLoginForm() {
                                         <div className="input-feedback">{errors.email}</div>
                                     )}
                                 </FormGroup>
-                                <FormGroup FormGroup as={Row} className="mb-3" controlId="formHorizontalPassword">
-                                    <Form.Label column sm={3}>Password</Form.Label>
+                                <FormGroup FormGroup as={Row} className="mb-3" controlId="formHorizontalPassword" align="left">
+                                    <Form.Label column sm={4}>Password</Form.Label>
                                     <Form.Control
                                         type="password"
                                         placeholder="Enter your password"
@@ -129,10 +79,12 @@ function ValidatedLoginForm() {
 
                                     )}
                                 </FormGroup >
-                                <div >
-                                    <Button type="submit" variant="light">
-                                        Login   </Button>
+                                <div className="d-grid gap-2">
+                                    <Button type="submit" variant="primary"
+                                    >Sign In  </Button>
                                 </div>
+                                Not Registered yet?
+                            <Button padding="10px" variant="link" href="/registerform"> <h6>Sign Up </h6></Button>
 
 
                             </Form>

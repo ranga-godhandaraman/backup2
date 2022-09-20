@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Row, Col, FormGroup, Button, Form, Card } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./registration.css";
 
 function ValidatedRegisterForm() {
     const [errors, setErrors] = useState({ username: "", email: "", password: "" });
@@ -36,9 +37,7 @@ function ValidatedRegisterForm() {
         if (errs.username != "" || errs.email != "" || errs.password != "") return;
         console.log(registerForm);
         axios.post('http://localhost:8081/api/auth/signup', registerForm)
-        // .then(resp=>{
-        //     console.log(resp)
-        // })
+        
         .then(data => {
         console.log(data)
         if (data.status == 200) {
@@ -54,10 +53,11 @@ return (
     <div className="section" style={{ margin: "5rem" }} align="center" >
         <Row>
             <Col>
-                <Card style={{ width: '25rem' }} className="bg-dark text-white" align="center"  >
-                    <Card.Body>
+                <Card style={{ width: '25rem' }} align="center"  >
+                    <Card.Body class='p-4'>
                         <Form onSubmit={handleSubmit}>
-                            <FormGroup as={Row} className="mb-3" controlId="formHorizontaluserName">
+                        <h3>Sign Up</h3>
+                            <FormGroup as={Row} className="mb-3" controlId="formHorizontaluserName" align="left">
                                 <Form.Label column sm={3} >Name</Form.Label>
                                 <Form.Control
                                     type="text"
@@ -68,7 +68,7 @@ return (
                                     <div className="input-feedback">{errors.username}</div>
                                 )}
                             </FormGroup>
-                            <FormGroup as={Row} className="mb-3" controlId="formHorizontalEmail">
+                            <FormGroup as={Row} className="mb-3" controlId="formHorizontalEmail" align="left">
                                 <Form.Label column sm={3} >Email</Form.Label>
                                 <Form.Control
                                     type="text"
@@ -79,8 +79,8 @@ return (
                                     <div className="input-feedback">{errors.email}</div>
                                 )}
                             </FormGroup>
-                            <FormGroup FormGroup as={Row} className="mb-3" controlId="formHorizontalPassword">
-                                <Form.Label column sm={3}>Password</Form.Label>
+                            <FormGroup FormGroup as={Row} className="mb-3" controlId="formHorizontalPassword" align="left">
+                                <Form.Label column sm={4}>Password</Form.Label>
                                 <Form.Control
                                     type="password"
                                     placeholder="Enter your password"
@@ -91,11 +91,15 @@ return (
 
                                 )}
                             </FormGroup >
-                            <div >
-                                <Button type="submit" variant="light">
-                                    Register  </Button>
-                            </div>
-
+                           
+                            
+                            <div className="d-grid gap-2">
+                                            <Button type="submit" variant="success" >Sign Up</Button>
+                                    </div>
+                                        <Col xs="12" sm="6">
+                                           Go to<Button href='/' variant="link">Sign In</Button>page
+                                        </Col>
+                                    
 
                         </Form>
                     </Card.Body>

@@ -5,16 +5,12 @@ function Header(){
     return( 
         
         
-        <Nav className="justify-content-center">
-            
-    <Row>
-        <Col padding= "10px"  >
+        <div className="section" style={{ margin: "25px" }} align="center">
+        
             <h2>ACL Digital</h2>
-        </Col>
-    </Row>
     
 
-    </Nav>
+    </div>
 
     
     )

@@ -1,26 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function Editemployee(props) {
-    const [employee, setemployee] = useState({ name: '', email: '', gender: '' });
-
+function Editemployee() {
+    const [employee, setEmployee] = useState({ Name: '', Email: '', Gender: '' });
+    let { id } = useParams();
     const navigate = useNavigate();
-    const Url = "http://localhost:8080/api/tutorials";
+    const Url = "http://localhost:8080/api/tutorials/"+id;
+     
+    const GetData = async () => {
+        const result = await axios(Url);
+        console.log(result);
+        setEmployee(result.data);
+    };
 
     useEffect((id) => {
-        const GetData = async () => {
-            const result = await axios(Url);
-            console.log("",)
-            setemployee(result.data);
-        };
         GetData();
     }, []);
     const UpdateEmployee = (e) => {
         e.preventDefault();
-        const data = { Name: employee.name, Email: employee.email, Gender: employee.gender };
-        axios.post(Url, data)
+        console.log(employee);
+        const data = {
+            "name": employee.name,
+            "email": employee.email,
+            "gender": employee.gender
+
+        }
+        axios.put(Url, data)
             .then((result) => {
                 navigate('/view')
             });
@@ -28,9 +35,10 @@ function Editemployee(props) {
 
 
     const onChange = (e) => {
-        e.persist();
+        console.log(e);
+        // e.persist();
         // debugger;
-        setemployee({ ...employee, [e.target.name]: e.target.value });
+        setEmployee({ ...employee, [e.target.name]: e.target.value });
     }
 
     return (
@@ -38,29 +46,29 @@ function Editemployee(props) {
             <Container>
                 <Row className="justify-content-center">
                     <Col md="12" lg="10" xl="8">
-                    <Card className="mb-3" style={{ width: '25rem' }}>
+                        <Card className="mb-3" style={{ width: '25rem' }}>
                             <Card.Body className="p-4">
-                                <Form onSubmit={UpdateEmployee}>
+                                <form onSubmit={UpdateEmployee}>
                                     <h1>Update Employee</h1>
 
                                     <Form.Group className="mb-3">
-                                        <Form.Control type="text" name="Name" id="Name" placeholder="Name" value={employee.name} onChange={onChange} />
+                                        <Form.Control type="text" name="name" id="name" placeholder="Name" defaultValue={employee.name} onChange={onChange} />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
-                                        <Form.Control type="text" name="Email" id="Email" placeholder="Email" value={employee.email} onChange={onChange} />
+                                        <Form.Control type="text" name="email" id="email" placeholder="Email" defaultValue={employee.email} onChange={onChange} />
                                     </Form.Group>
                                     <Form.Group className="mb-4">
-                                        <Form.Control type="text" placeholder="Gender" name="Gender" id="Gender" value={employee.gender} onChange={onChange} />
+                                        <Form.Control type="text" placeholder="gender" name="gender" id="Gender" defaultValue={employee.gender} onChange={onChange} />
                                     </Form.Group>
                                     <Row>
                                         <Col xs="12" sm="6">
                                             <Button type="submit" variant="primary" >Update</Button>
                                         </Col>
                                         <Col xs="12" sm="6">
-                                            <Button  href="/view" variant="danger" >Cancel</Button>
+                                            <Button href="/view" variant="danger" >Cancel</Button>
                                         </Col>
                                     </Row>
-                                </Form>
+                                </form>
                             </Card.Body>
                         </Card>
                     </Col>
