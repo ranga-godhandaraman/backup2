@@ -22,9 +22,9 @@ function Editemployee() {
         e.preventDefault();
         console.log(employee);
         const data = {
-            "name": employee.name,
-            "email": employee.email,
-            "gender": employee.gender
+            "name": employee.Name,
+            "email": employee.Email,
+            "gender": employee.Gender
 
         }
         axios.put(Url, data)
@@ -58,7 +58,12 @@ function Editemployee() {
                                         <Form.Control type="text" name="email" id="email" placeholder="Email" defaultValue={employee.email} onChange={onChange} />
                                     </Form.Group>
                                     <Form.Group className="mb-4">
-                                        <Form.Control type="text" placeholder="gender" name="gender" id="Gender" defaultValue={employee.gender} onChange={onChange} />
+                                        <select name="Gender" value={employee.gender} onChange={onChange}>
+                                            <option id="gender">Gender</option>
+                                            <option id="Male">Male</option>
+                                            <option id="Female">Female</option>
+                                            <option id="Others">Others</option>
+                                        </select>
                                     </Form.Group>
                                     <Row>
                                         <Col xs="12" sm="6">

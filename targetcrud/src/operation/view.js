@@ -3,10 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Table,Col, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from 'react-router-dom';
+import Pagination from "./pagination/pagination";
 
 function View() {
 
     const [employees, setEmployees] = useState([]);
+
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(true);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [recordsPerPage] = useState(10);
     
 
     const navigate = useNavigate();
@@ -18,6 +25,11 @@ function View() {
                 setEmployees(res.data);
             })
     }, []);
+    const indexOfLastRecord = currentPage * recordsPerPage;
+    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+    const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
+    const nPages = Math.ceil(data.length / recordsPerPage)
+
     const logOut =()=>{
         sessionStorage.removeItem("userValidated")
         navigate("/")
@@ -43,7 +55,7 @@ function View() {
         axios.delete('http://localhost:8080/api/tutorials/' + id)
             .then((result) => {
                 // navigate('/view')
-                alert('Successfully Deleted');
+                // alert('Successfully Deleted');
                 window. location. reload(false);
 
             });
@@ -96,7 +108,13 @@ function View() {
                 </Table>
 
             </div>
+            {/* <Pagination
+                nPages={nPages}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+            />   */}
         </Card>
+        
     )
 }
 
