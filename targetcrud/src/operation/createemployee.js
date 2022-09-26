@@ -4,53 +4,47 @@ import { Button, Card, Col, Container, Form, Row, Dropdown } from 'react-bootstr
 import { useNavigate } from 'react-router-dom';
 
 function Createemployee(props) {
-    const [employee, setemployee] = useState({ Name: '', Email: '', Gender: '' });
+    const [employee, setemployee] = useState({ name: '', email: '', gender: '' });
     const [showLoading, setShowLoading] = useState(false);
     const navigate = useNavigate();
     const apiUrl = "http://localhost:8080/api/tutorials";
-
-
-
+    
+    const [errors, setErrors] = useState({ name: "", email: "", gender: "" });
+    let nameRef = useRef();
+    let emailRef = useRef();
+    let gendRef = useRef();
+   
 
     const Insertemployee = (e) => {
         e.preventDefault();
-        // const [errors, setErrors] = useState({ Name: "", Email: "", Gender: "" });
-        // // let errorTimer = 0;
-
-        // let nameRef = useRef();
-        // let emailRef = useRef();
-        // let gendRef = useRef();
-        // let createForm = { Name: nameRef.current.value, Email: emailRef.current.value, Gender: gendRef.current.value };
-        // let errs = { Name: "", Email: "", Gender: "" };
         const data = {
-            "name": employee.Name,
-            "email": employee.Email,
-            "gender": employee.Gender
+            "name": employee.name,
+            "email": employee.email,
+            "gender": employee.gender
 
         }
-        // setErrors({ Name: "", Email: "", Gender: "" })
+        let createForm = { name: nameRef.current.value, email: emailRef.current.value, gender: gendRef.current.value };
+        let errs = { name: "", email: "", gender: "" };
+        // let errorTimer = 0;   
+        setErrors({ name: "", email: "", gender: "" })
 
-        // if (createForm.Name == '') {
-        //     errs.Name = 'User name should not be Empty';
-        // }
-        // if (createForm.Email == '') {
-        //     errs.Email = 'Email should not be Empty';
-        // } else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(createForm.Email))) {
-        //     errs.Email = 'Enter a valid Email';
-        // }
-        // if (createForm.Gender === '') {
-        //     errs.Gender = 'gender should not be empty';
-        // }
-        // setErrors(errs)
-        // if (errs.Name != "" || errs.Email != "" || errs.Gender != "") return;
+        if (createForm.name == '') {
+            errs.name = 'User name should not be Empty';
+        }
+        if (createForm.email == '') {
+            errs.email = 'Email should not be Empty';
+        } else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(createForm.email))) {
+            errs.email = 'Enter a valid Email';
+        }
+        if (createForm.gender === '') {
+            errs.gender = 'gender should not be empty';
+        }
+        setErrors(errs)
+        if (errs.name != "" || errs.email != "" || errs.gender != "") return;
         axios.post(apiUrl, data)
             .then((result) => {
                 navigate('/view')
             });
-
-        
-
-
         // clearTimeout(errorTimer);
         // errorTimer = setTimeout(function () {
 
@@ -61,9 +55,6 @@ function Createemployee(props) {
         setemployee({ ...employee, [e.target.name]: e.target.value });
         
     }
-
-
-
 
     return (
         <div className="section" style={{ margin: "5rem" }} align="center" >
@@ -76,13 +67,13 @@ function Createemployee(props) {
                                     <h1>Create Employee</h1>
 
                                     <Form.Group className="mb-3">
-                                        <Form.Control type="text" name="Name" id="Name" placeholder="Name" value={employee.Name} onChange={onChange} />
+                                        <Form.Control type="text" name="name" id="name" placeholder="Name" value={employee.name} onChange={onChange} />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
-                                        <Form.Control type="text" name="Email" id="Email" placeholder="Email" value={employee.Email} onChange={onChange} />
+                                        <Form.Control type="text" name="email" id="email" placeholder="Email" value={employee.email} onChange={onChange} />
                                     </Form.Group>
                                     <Form.Group className="mb-4">
-                                        <select name="Gender" value={employee.Gender} onChange={onChange}>
+                                        <select name="gender" value={employee.gender} onChange={onChange}>
                                             <option id="gender">Gender</option>
                                             <option id="Male">Male</option>
                                             <option id="Female">Female</option>

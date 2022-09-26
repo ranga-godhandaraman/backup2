@@ -25,10 +25,10 @@ function View() {
                 setEmployees(res.data);
             })
     }, []);
-    const indexOfLastRecord = currentPage * recordsPerPage;
-    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-    const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
-    const nPages = Math.ceil(data.length / recordsPerPage)
+    // const indexOfLastRecord = currentPage * recordsPerPage;
+    // const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+    // const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
+    // const nPages = Math.ceil(data.length / recordsPerPage)
 
     const logOut =()=>{
         sessionStorage.removeItem("userValidated")
