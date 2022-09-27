@@ -4,28 +4,32 @@ import { Button, Card, Col, Container, Form, Row, Dropdown } from 'react-bootstr
 import { useNavigate } from 'react-router-dom';
 
 function Createemployee(props) {
-    const [employee, setemployee] = useState({ name: '', email: '', gender: '' });
+    const [employee, setemployee] = useState({ Name: '', Email: '', Gender: '' });
     const [showLoading, setShowLoading] = useState(false);
     const navigate = useNavigate();
     const apiUrl = "http://localhost:8080/api/tutorials";
-    
+
     const [errors, setErrors] = useState({ name: "", email: "", gender: "" });
     let nameRef = useRef();
     let emailRef = useRef();
     let gendRef = useRef();
-   
+    let errorTimer = 0;
+
 
     const Insertemployee = (e) => {
         e.preventDefault();
         const data = {
-            "name": employee.name,
-            "email": employee.email,
-            "gender": employee.gender
+            "name": employee.Name,
+            "email": employee.Email,
+            "gender": employee.Gender
 
         }
         let createForm = { name: nameRef.current.value, email: emailRef.current.value, gender: gendRef.current.value };
         let errs = { name: "", email: "", gender: "" };
-        // let errorTimer = 0;   
+        clearTimeout(errorTimer);
+        errorTimer = setTimeout(function () {
+            setErrors({ email: "", password: "" })
+        }, 5000)   
         setErrors({ name: "", email: "", gender: "" })
 
         if (createForm.name == '') {
@@ -36,7 +40,7 @@ function Createemployee(props) {
         } else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(createForm.email))) {
             errs.email = 'Enter a valid Email';
         }
-        if (createForm.gender === '') {
+        if (createForm.gender === 'Gender') {
             errs.gender = 'gender should not be empty';
         }
         setErrors(errs)
@@ -45,15 +49,14 @@ function Createemployee(props) {
             .then((result) => {
                 navigate('/view')
             });
-        // clearTimeout(errorTimer);
-        // errorTimer = setTimeout(function () {
+     
 
 
     };
     const onChange = (e) => {
 
         setemployee({ ...employee, [e.target.name]: e.target.value });
-        
+
     }
 
     return (
@@ -67,18 +70,30 @@ function Createemployee(props) {
                                     <h1>Create Employee</h1>
 
                                     <Form.Group className="mb-3">
-                                        <Form.Control type="text" name="name" id="name" placeholder="Name" value={employee.name} onChange={onChange} />
+                                        <Form.Control type="text" name="Name" id="Name" placeholder="Name"
+                                            defaultValue={employee.Name} onChange={onChange}
+                                            ref={nameRef} />
+                                            {errors.nmae !== '' && (
+                                        <div className="input-feedback">{errors.name }</div>
+                                    )}
                                     </Form.Group>
                                     <Form.Group className="mb-3">
-                                        <Form.Control type="text" name="email" id="email" placeholder="Email" value={employee.email} onChange={onChange} />
+                                        <Form.Control type="text" name="Email" id="Email" placeholder="Email"
+                                            defaultValue={employee.Email} onChange={onChange}
+                                            ref={emailRef} />
+                                        {errors.email !== '' && (
+                                            <div className="input-feedback">{errors.email}</div>
+                                        )}
                                     </Form.Group>
                                     <Form.Group className="mb-4">
-                                        <select name="gender" value={employee.gender} onChange={onChange}>
+                                        <select name="Gender" value={employee.Gender} onChange={onChange} ref={gendRef}>
                                             <option id="gender">Gender</option>
                                             <option id="Male">Male</option>
                                             <option id="Female">Female</option>
                                             <option id="Others">Others</option>
-                                        </select>
+                                        </select>{errors.gender !== '' && (
+                                        <div className="input-feedback">{errors.gender}</div>
+                                    )}
                                     </Form.Group>
 
 
@@ -104,3 +119,5 @@ function Createemployee(props) {
 }
 
 export default Createemployee
+
+

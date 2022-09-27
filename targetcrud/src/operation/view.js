@@ -1,9 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Table,Col, Row } from "react-bootstrap";
+import { Button, Card, Table, Col, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from 'react-router-dom';
 import Pagination from "./pagination/pagination";
+
 
 function View() {
 
@@ -14,7 +15,7 @@ function View() {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
-    
+
 
     const navigate = useNavigate();
 
@@ -30,12 +31,58 @@ function View() {
     // const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
     // const nPages = Math.ceil(data.length / recordsPerPage)
 
-    const logOut =()=>{
+    const logOut = () => {
         sessionStorage.removeItem("userValidated")
         navigate("/")
 
     }
 
+    const [sortState, setSortState] = useState("none");
+    const sortMethods = {
+        none: { method: (a, b) => null },
+        ascending: { method: undefined },
+        descending: { method: (a, b) => (a > b ? -1 : 1) },
+    };
+
+    onclick=(n)=>{
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("employee");
+        switching = true;    
+        dir = "asc";    
+        while (switching) {     
+          switching = false;
+          rows = table.rows;
+        
+          for (i = 1; i < (rows.length - 1); i++) {       
+            shouldSwitch = false;       
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            
+            if (dir == "asc") {
+              if (x.innerHTML.toLowerCase() > y.dangerouslySetInnerHTML.toLowerCase()) {            
+                break;
+              }
+            } else if (dir == "desc") {
+              if (x.innerHTML.toLowerCase() < y.dangerouslySetInnerHTML.toLowerCase()) {
+             
+                shouldSwitch = true;
+                break;
+              }
+            }
+          }
+          if (shouldSwitch) {       
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;       
+            switchcount ++;
+          } else {
+           
+            if (switchcount == 0 && dir == "asc") {
+              dir = "desc";
+              switching = true;
+            }
+          }
+        }
+    }
 
     useEffect(() => {
 
@@ -45,7 +92,7 @@ function View() {
         navigate({
             pathname: '/update/' + id
         });
-        
+
     };
 
     const handleDelete = (id, i) => {
@@ -54,54 +101,53 @@ function View() {
         setEmployees(employees);
         axios.delete('http://localhost:8080/api/tutorials/' + id)
             .then((result) => {
-                // navigate('/view')
-                // alert('Successfully Deleted');
-                window. location. reload(false);
+                window.location.reload(false);
 
             });
 
     }
-    // 
+
     return (
         <Card style={{ width: 'auto' }} align="center">
             <div style={{ margin: "2rem" }}>
-            <div align='right'>
-                <Button variant="secondary"  onClickCapture={logOut}>Logout</Button></div>
+                <div align='right'>
+                    <Button variant="secondary" onClickCapture={logOut}>Logout</Button></div>
                 <h2>ACL Employees List</h2>
-                
+
                 <div align='right'>
                     <Button href='/create'>Create</Button>
                 </div>
                 <div align='right'>
-                <Col xs="12" sm="6">
-                   
+                    <Col xs="12" sm="6">
+
                     </Col>
                 </div>
-                <Table striped bordered hover >
+                <Table striped bordered hover id='employee'>
                     <thead align="center">
-                        <tr>
-                            <th>Name</th>
-                            <th>E-Mail</th>
+                        <tr >
+                            <th >Name <Button onclick={onclick}>Sort</Button> </th>
+                            <th >E-Mail</th>
                             <th>Gender</th>
-                            <th colSpan="2"> Actions</th>
+                            <th colSpan="2"> Actions
+                            </th> 
                         </tr>
                     </thead>
                     <tbody >
+
                         {employees.map((employee, i) => {
                             return <tr key={i} >
-                                <td>{employee.name}</td>
+                                <td>{employee.name} </td>
                                 <td>{employee.email}</td>
                                 <td>{employee.gender}</td>
                                 <td >
                                     <Button variant="warning" onClick={() => editemployee(employee.id)}>Edit</Button>
-                            &nbsp;</td>
+                                    &nbsp;</td>
 
                                 <td>
-                                
-                                    <Button onClick={() => handleDelete(employee.id, i)} variant="danger">Delete</Button>
-                            
-                                </td>
 
+                                    <Button onClick={() => handleDelete(employee.id, i)} variant="danger">Delete</Button>
+
+                                </td>
                             </tr>
                         })}
                     </tbody>
@@ -114,7 +160,7 @@ function View() {
                 setCurrentPage={setCurrentPage}
             />   */}
         </Card>
-        
+
     )
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useRef} from 'react';
 import axios from 'axios';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,6 +8,13 @@ function Editemployee() {
     let { id } = useParams();
     const navigate = useNavigate();
     const Url = "http://localhost:8080/api/tutorials/"+id;
+
+    const [errors, setErrors] = useState({ name: "", email: "", gender: "" });
+    let nameRef = useRef();
+    let emailRef = useRef();
+    let gendRef = useRef();
+    let errorTimer = 0;
+
      
     const GetData = async () => {
         const result = await axios(Url);
@@ -27,6 +34,28 @@ function Editemployee() {
             "gender": employee.Gender
 
         }
+        let createForm = { name: nameRef.current.value, email: emailRef.current.value, gender: gendRef.current.value };
+        let errs = { name: "", email: "", gender: "" };
+        clearTimeout(errorTimer);
+        errorTimer = setTimeout(function () {
+            setErrors({ email: "", password: "" })
+        }, 5000)   
+        setErrors({ name: "", email: "", gender: "" })
+
+        if (createForm.name == '') {
+            errs.name = 'User name should not be Empty';
+        }
+        if (createForm.email == '') {
+            errs.email = 'Email should not be Empty';
+        } else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(createForm.email))) {
+            errs.email = 'Enter a valid Email';
+        }
+        if (createForm.gender === '') {
+            errs.gender = 'gender should not be empty';
+        }
+        setErrors(errs)
+        if (errs.name != "" || errs.email != "" || errs.gender != "") return;
+        
         axios.put(Url, data)
             .then((result) => {
                 navigate('/view')
@@ -52,18 +81,30 @@ function Editemployee() {
                                     <h1>Update Employee</h1>
 
                                     <Form.Group className="mb-3">
-                                        <Form.Control type="text" name="name" id="name" placeholder="Name" defaultValue={employee.name} onChange={onChange} />
+                                        <Form.Control type="text" name="Name" id="Name" placeholder="Name"
+                                            defaultValue={employee.name} onChange={onChange}
+                                            ref={nameRef} />
+                                            {errors.nmae !== '' && (
+                                        <div className="input-feedback">{errors.name }</div>
+                                    )}
                                     </Form.Group>
                                     <Form.Group className="mb-3">
-                                        <Form.Control type="text" name="email" id="email" placeholder="Email" defaultValue={employee.email} onChange={onChange} />
+                                        <Form.Control type="text" name="Email" id="Email" placeholder="Email"
+                                            defaultValue={employee.email} onChange={onChange}
+                                            ref={emailRef} />
+                                        {errors.email !== '' && (
+                                            <div className="input-feedback">{errors.email}</div>
+                                        )}
                                     </Form.Group>
                                     <Form.Group className="mb-4">
-                                        <select name="Gender" value={employee.gender} onChange={onChange}>
+                                        <select name="Gender" value={employee.Gender} onChange={onChange} ref={gendRef}>
                                             <option id="gender">Gender</option>
                                             <option id="Male">Male</option>
                                             <option id="Female">Female</option>
                                             <option id="Others">Others</option>
-                                        </select>
+                                        </select>{errors.gender !== '' && (
+                                        <div className="input-feedback">{errors.gender}</div>
+                                    )}
                                     </Form.Group>
                                     <Row>
                                         <Col xs="12" sm="6">
