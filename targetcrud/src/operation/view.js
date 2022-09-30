@@ -4,19 +4,43 @@ import { Button, Card, Table, Col, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from 'react-router-dom';
 import Pagination from "./pagination/pagination";
-
+import DataTable from 'react-data-table-component';
 
 function View() {
 
     const [employees, setEmployees] = useState([]);
 
-    const [data, setData] = useState([])
+    // const [data, setData] = useState([])
     const [loading, setLoading] = useState(true);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
 
+const columns = [
+    {
+        name: 'Name',
+        selector: row => row.name,
+        sortable: true,
+    },
+    {
+        name: 'Email',
+        selector: row => row.email,
+        sortable: true,
+    },
+    {
+        name: 'Gender',
+        selector: row => row.gender,
+        sortable: true,
+    }
+];
 
+const data =[ {
+    id:"",
+    name:"",
+    email:"",
+    gender:""
+}
+]
     const navigate = useNavigate();
 
     React.useEffect((id) => {
@@ -101,7 +125,7 @@ function View() {
         setEmployees(employees);
         axios.delete('http://localhost:8080/api/tutorials/' + id)
             .then((result) => {
-                window.location.reload(false);
+             
 
             });
 
@@ -166,3 +190,39 @@ function View() {
 
 export default View;
 
+// import DataTable from 'react-data-table-component';
+
+// const columns = [
+//     {
+//         name: 'Title',
+//         selector: row => row.title,
+//         sortable: true,
+//     },
+//     {
+//         name: 'Year',
+//         selector: row => row.year,
+//         sortable: true,
+//     },
+// ];
+
+// const data =[ {
+//     id: 1,
+//     title: 'Beetlejuice',
+//     year: '1988',
+// },
+// {
+//     id: 2,
+//     title: 'Ghostbusters',
+//     year: '1984',
+// },
+// ]
+
+// function MyComponent() {
+//     return (
+//         <DataTable
+//             columns={columns}
+//             data={data}
+//         />
+//     );
+// };
+// export default MyComponent;

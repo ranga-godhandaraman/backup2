@@ -27,15 +27,15 @@ function App() {
             <Route path='/' element={<FormValidator />} />
             <Route path='/registerform' element={<Registerform />} />
             <Route path='/create' element={
-              <Protected>
+               <Protected>
                 <Createemployee />
-              </Protected>
+               </Protected>
             } />
             <Route path='/' element={<Navigate to="view" />} />
             <Route path='/view' element={
               <Protected>
-                <View />
-              </Protected>
+                 <View />
+               </Protected>
             } />
             <Route path='/update/:id' element={
               <Protected>
